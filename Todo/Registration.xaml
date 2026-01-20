@@ -120,6 +120,7 @@
                 </TransformGroup>
             </Border.RenderTransform>
         </Border>
+        <Image Margin="111,69,489,230" Source="/Image2.png" Stretch="Fill"/>
 
     </Grid>
 </Window>
