@@ -19,7 +19,7 @@ namespace Todo
     /// </summary>
     public partial class Creating_tasks : Window
     {
-        // Изменено: убрано static, теперь это экземплярное событие
+  
         public event Action<Todo.Main.Task> TaskCreated;
 
         public Creating_tasks()
@@ -71,7 +71,7 @@ namespace Todo
 
         private void Time_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Метод может остаться пустым или быть реализован по необходимости
+      
         }
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -108,7 +108,7 @@ namespace Todo
                 // Создание новой задачи
                 var newTask = new Todo.Main.Task
                 {
-                    Id = Guid.NewGuid().ToString(), // Уникальный ID
+                    Id = Guid.NewGuid().ToString(), 
                     Title = TitleTextBox.Text.Trim(),
                     Category = ((ComboBoxItem)CategoryComboBox.SelectedItem).Content?.ToString() ?? "Без категории",
                     Description = DescriptionTextBox?.Text?.Trim() ?? "",
@@ -162,7 +162,7 @@ namespace Todo
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Метод может остаться пустым или быть реализован по необходимости
+  
         }
     }
 }

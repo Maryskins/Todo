@@ -63,7 +63,7 @@ namespace Todo
             }
         }
 
-        // Загрузка сохраненного фото
+
         private void LoadSavedPhoto()
         {
             try
@@ -127,7 +127,7 @@ namespace Todo
             _tasks[newTask.Id] = newTask;
             LoadTasks(_currentCategory);
 
-            // Выделяем созданную задачу
+     
             _currentSelectedTaskId = newTask.Id;
             ShowTaskDetails(newTask);
 
@@ -272,7 +272,7 @@ namespace Todo
             }
         }
 
-        // Обновление заголовка
+  
         private void UpdateHeaderText(string text)
         {
             SelectedTaskTitle.Text = text;
@@ -313,7 +313,7 @@ namespace Todo
             OtdyhButton.Visibility = Visibility.Visible;
         }
 
-        // Сброс стилей кнопок
+ 
         private void ResetCategoryButtons()
         {
             DomButton.Background = Brushes.White;
@@ -659,7 +659,7 @@ namespace Todo
             return template;
         }
 
-        // Метод для добавления задачи извне
+
         public void AddNewTask(Task newTask)
         {
             _tasks[newTask.Id] = newTask;
@@ -685,22 +685,22 @@ namespace Todo
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Реализация по необходимости
+           
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // Реализация по необходимости
+          
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             Creating_tasks window6 = new Creating_tasks();
 
-            // Подписываемся на событие создания задачи
+      
             window6.TaskCreated += OnTaskCreated;
 
-            // Отписываемся при закрытии окна
+         
             window6.Closed += (s, args) =>
             {
                 window6.TaskCreated -= OnTaskCreated;

@@ -56,7 +56,7 @@ namespace Todo
             string email = EmailTextBox.Text;
             string password = PasswordTextBox.Text;
 
-            // Проверка на наличие введенных данных
+       
             if (email == DefaultEmailText || password == DefaultPasswordText)
             {
                 MessageBox.Show("Пожалуйста, заполните все поля.");

@@ -91,22 +91,21 @@ namespace Todo
         {
             Creating_tasks taskCreationWindow = new Creating_tasks();
 
-            // Подписываемся на событие через экземпляр
+           
             taskCreationWindow.TaskCreated += OnTaskCreated;
             taskCreationWindow.Show();
         }
 
-        // Метод должен принимать Todo.Main.Task, так как событие передает этот тип
+      
         private void OnTaskCreated(Todo.Main.Task newTask)
         {
-            // Создаем окно Main
+           
             Main mainWindow = new Main();
 
-            // Убеждаемся, что используем правильный тип Main
+
             if (mainWindow is Main main)
             {
-                // Прямой вызов метода с правильным типом
-                // Метод AddNewTask в классе Main ожидает Todo.Main.Task
+ 
                 main.AddNewTask(newTask);
 
                 if (UserPhoto != null)
@@ -124,21 +123,7 @@ namespace Todo
             }
         }
 
-        // Дополнительный метод, если нужно конвертировать в TaskItem
-        private Todo.Main.Task ConvertTaskItemToMainTask(TaskItem taskItem)
-        {
-            return new Todo.Main.Task
-            {
-                Id = Guid.NewGuid().ToString(),
-                Title = taskItem.Title,
-                Description = taskItem.Description,
-                Date = taskItem.DueDate.ToString("dd MMMM yyyy"),
-                Time = taskItem.DueDate.ToString("HH:mm"),
-                Category = "Без категории",
-                IsCompleted = false
-            };
-        }
-
+       
         private void ChangeUserPhoto()
         {
             try

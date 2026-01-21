@@ -127,7 +127,7 @@ namespace Todo
 
         private bool ValidateRegistrationFields(string username, string email, string password, string confirmPassword)
         {
-            // Проверка на заполнение полей
+
             if (IsPlaceholderOrEmpty(username, UsernamePlaceholderText))
             {
                 ShowWarningMessage("Пожалуйста, введите имя пользователя.");
@@ -152,7 +152,7 @@ namespace Todo
                 return false;
             }
 
-            // Валидация данных
+    
             if (!_inputValidator.IsValidUsername(username))
             {
                 ShowWarningMessage("Имя пользователя должно содержать не менее 3 символов.");
