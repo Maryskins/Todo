@@ -6,6 +6,20 @@ using System.Threading.Tasks;
 
 namespace Todo.Repository
 {
+    public class UserModel
+    {
+        public int Id { get; set; }
+        public string Login { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+        public string FullName { get; set; }
+        public DateTime RegistrationDate { get; set; }
+
+        public UserModel()
+        {
+            RegistrationDate = DateTime.Now;
+        }
+    }
     public class UserRepository
     {
         private static List<UserModel> _users = new List<UserModel>();

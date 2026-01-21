@@ -21,215 +21,242 @@ namespace Todo
     /// </summary>
     public partial class Registration : Window
     {
-        private string usernamePlaceholderText = "Введите имя пользователя";
-        private string emailPlaceholderText = "exam@yandex.ru";
-        private string passwordPlaceholderText = "Введите пароль";
-        private string confirmPasswordPlaceholderText = "Повторите пароль";
+        private const string UsernamePlaceholderText = "Введите имя пользователя";
+        private const string EmailPlaceholderText = "exam@yandex.ru";
+        private const string PasswordPlaceholderText = "Введите пароль";
+        private const string ConfirmPasswordPlaceholderText = "Повторите пароль";
 
-        private UserRepository _userRepository;
+        private readonly UserRepository _userRepository;
+        private readonly InputValidator _inputValidator;
+
         public Registration()
         {
             InitializeComponent();
+
             _userRepository = new UserRepository();
+            _inputValidator = new InputValidator();
 
-
-            SetPlaceholder(TextBox_Username, usernamePlaceholderText);
-            SetPlaceholder(TextBox_Email, emailPlaceholderText);
-            SetPlaceholder(TextBox_Password, passwordPlaceholderText);
-            SetPlaceholder(TextBox_ConfirmPassword, confirmPasswordPlaceholderText);
-
-
-            Зарегистрироваться.Click += Зарегистрироваться_Click;
-            Назад.Click += Назад_Click;
-
-
-            TextBox_Username.GotFocus += TextBox_Username_GotFocus;
-            TextBox_Username.LostFocus += TextBox_Username_LostFocus;
-            TextBox_Email.GotFocus += TextBox_Email_GotFocus;
-            TextBox_Email.LostFocus += TextBox_Email_LostFocus;
-
-
-            TextBox_Password.GotFocus += TextBox_Password_GotFocus;
-            TextBox_Password.LostFocus += TextBox_Password_LostFocus;
-            TextBox_ConfirmPassword.GotFocus += TextBox_ConfirmPassword_GotFocus;
-            TextBox_ConfirmPassword.LostFocus += TextBox_ConfirmPassword_LostFocus;
+            InitializePlaceholders();
+            SubscribeToEvents();
         }
-        private void SetPlaceholder(TextBox textBox, string placeholder)
+
+        private void InitializePlaceholders()
         {
-            if (string.IsNullOrEmpty(textBox.Text) || textBox.Text == placeholder)
+            SetTextBoxPlaceholder(UsernameTextBox, UsernamePlaceholderText);
+            SetTextBoxPlaceholder(EmailTextBox, EmailPlaceholderText);
+            SetTextBoxPlaceholder(PasswordTextBox, PasswordPlaceholderText);
+            SetTextBoxPlaceholder(ConfirmPasswordTextBox, ConfirmPasswordPlaceholderText);
+        }
+
+        private void SubscribeToEvents()
+        {
+            RegisterButton.Click += OnRegisterButtonClick;
+            BackButton.Click += OnBackButtonClick;
+
+            UsernameTextBox.GotFocus += OnUsernameTextBoxGotFocus;
+            UsernameTextBox.LostFocus += OnUsernameTextBoxLostFocus;
+
+            EmailTextBox.GotFocus += OnEmailTextBoxGotFocus;
+            EmailTextBox.LostFocus += OnEmailTextBoxLostFocus;
+
+            PasswordTextBox.GotFocus += OnPasswordTextBoxGotFocus;
+            PasswordTextBox.LostFocus += OnPasswordTextBoxLostFocus;
+
+            ConfirmPasswordTextBox.GotFocus += OnConfirmPasswordTextBoxGotFocus;
+            ConfirmPasswordTextBox.LostFocus += OnConfirmPasswordTextBoxLostFocus;
+        }
+
+        private void SetTextBoxPlaceholder(TextBox textBox, string placeholderText)
+        {
+            if (string.IsNullOrEmpty(textBox.Text) || textBox.Text == placeholderText)
             {
-                textBox.Text = placeholder;
+                textBox.Text = placeholderText;
                 textBox.Foreground = Brushes.Gray;
             }
         }
 
-        //очистка подсказки
-        private void ClearPlaceholder(TextBox textBox)
+        private void ClearTextBoxPlaceholder(TextBox textBox)
         {
-
-            if (textBox.Text == usernamePlaceholderText ||
-                textBox.Text == emailPlaceholderText ||
-                textBox.Text == passwordPlaceholderText ||
-                textBox.Text == confirmPasswordPlaceholderText)
+            if (textBox.Text == UsernamePlaceholderText ||
+                textBox.Text == EmailPlaceholderText ||
+                textBox.Text == PasswordPlaceholderText ||
+                textBox.Text == ConfirmPasswordPlaceholderText)
             {
                 textBox.Text = "";
                 textBox.Foreground = Brushes.Black;
             }
         }
 
-
-        private void Назад_Click(object sender, RoutedEventArgs e)
+        private void OnBackButtonClick(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
             this.Close();
         }
 
-
-        private void Зарегистрироваться_Click(object sender, RoutedEventArgs e)
+        private void OnRegisterButtonClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                string username = TextBox_Username.Text;
-                string email = TextBox_Email.Text;
-                string password = TextBox_Password.Text;
-                string confirmPassword = TextBox_ConfirmPassword.Text;
+                string username = UsernameTextBox.Text;
+                string email = EmailTextBox.Text;
+                string password = PasswordTextBox.Text;
+                string confirmPassword = ConfirmPasswordTextBox.Text;
 
-                InputValidator validator = new InputValidator();
-
-
-                if (username == usernamePlaceholderText || string.IsNullOrWhiteSpace(username))
+                if (!ValidateRegistrationFields(username, email, password, confirmPassword))
                 {
-                    MessageBox.Show("Пожалуйста, введите имя пользователя.", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                if (email == emailPlaceholderText || string.IsNullOrWhiteSpace(email))
+                bool registrationSuccessful = _userRepository.RegisterUser(username, password, email);
+
+                if (registrationSuccessful)
                 {
-                    MessageBox.Show("Пожалуйста, введите email.", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
+                    ShowSuccessMessage();
 
-                if (password == passwordPlaceholderText || string.IsNullOrWhiteSpace(password))
-                {
-                    MessageBox.Show("Пожалуйста, введите пароль.", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (confirmPassword == confirmPasswordPlaceholderText || string.IsNullOrWhiteSpace(confirmPassword))
-                {
-                    MessageBox.Show("Пожалуйста, повторите пароль.", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // Валидация данных
-                if (!validator.IsValidUsername(username))
-                {
-                    MessageBox.Show("Имя пользователя должно содержать не менее 3 символов.", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (!validator.IsValidEmail(email))
-                {
-                    MessageBox.Show("Пожалуйста, введите корректный email.", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (!validator.IsValidPassword(password))
-                {
-                    MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (password != confirmPassword)
-                {
-                    MessageBox.Show("Пароли не совпадают.", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // Регистрация пользователя через репозиторий
-                bool registrationSuccess = _userRepository.RegisterUser(username, password, email);
-
-                if (registrationSuccess)
-                {
-                    MessageBox.Show("Регистрация прошла успешно!", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    Main_empty window2 = new Main_empty();
-                    window2.Show();
+                    Main_empty mainWindow = new Main_empty();
+                    mainWindow.Show();
                     this.Close();
                 }
             }
             catch (Exception ex)
             {
-
-                MessageBox.Show($"Ошибка регистрации: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorMessage($"Ошибка регистрации: {ex.Message}");
             }
         }
 
-        private void TextBox_Username_GotFocus(object sender, RoutedEventArgs e)
+        private bool ValidateRegistrationFields(string username, string email, string password, string confirmPassword)
         {
-            ClearPlaceholder(TextBox_Username);
+            // Проверка на заполнение полей
+            if (IsPlaceholderOrEmpty(username, UsernamePlaceholderText))
+            {
+                ShowWarningMessage("Пожалуйста, введите имя пользователя.");
+                return false;
+            }
+
+            if (IsPlaceholderOrEmpty(email, EmailPlaceholderText))
+            {
+                ShowWarningMessage("Пожалуйста, введите email.");
+                return false;
+            }
+
+            if (IsPlaceholderOrEmpty(password, PasswordPlaceholderText))
+            {
+                ShowWarningMessage("Пожалуйста, введите пароль.");
+                return false;
+            }
+
+            if (IsPlaceholderOrEmpty(confirmPassword, ConfirmPasswordPlaceholderText))
+            {
+                ShowWarningMessage("Пожалуйста, повторите пароль.");
+                return false;
+            }
+
+            // Валидация данных
+            if (!_inputValidator.IsValidUsername(username))
+            {
+                ShowWarningMessage("Имя пользователя должно содержать не менее 3 символов.");
+                return false;
+            }
+
+            if (!_inputValidator.IsValidEmail(email))
+            {
+                ShowWarningMessage("Пожалуйста, введите корректный email.");
+                return false;
+            }
+
+            if (!_inputValidator.IsValidPassword(password))
+            {
+                ShowWarningMessage("Пароль должен содержать не менее 6 символов.");
+                return false;
+            }
+
+            if (password != confirmPassword)
+            {
+                ShowWarningMessage("Пароли не совпадают.");
+                return false;
+            }
+
+            return true;
         }
 
-        private void TextBox_Username_LostFocus(object sender, RoutedEventArgs e)
+        private bool IsPlaceholderOrEmpty(string text, string placeholderText)
         {
-            if (string.IsNullOrWhiteSpace(TextBox_Username.Text))
+            return text == placeholderText || string.IsNullOrWhiteSpace(text);
+        }
+
+        private void ShowWarningMessage(string message)
+        {
+            MessageBox.Show(message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        private void ShowSuccessMessage()
+        {
+            MessageBox.Show("Регистрация прошла успешно!", "Успех",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void OnUsernameTextBoxGotFocus(object sender, RoutedEventArgs e)
+        {
+            ClearTextBoxPlaceholder(UsernameTextBox);
+        }
+
+        private void OnUsernameTextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(UsernameTextBox.Text))
             {
-                SetPlaceholder(TextBox_Username, usernamePlaceholderText);
+                SetTextBoxPlaceholder(UsernameTextBox, UsernamePlaceholderText);
             }
         }
 
-        private void TextBox_Email_GotFocus(object sender, RoutedEventArgs e)
+        private void OnEmailTextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            ClearPlaceholder(TextBox_Email);
+            ClearTextBoxPlaceholder(EmailTextBox);
         }
 
-        private void TextBox_Email_LostFocus(object sender, RoutedEventArgs e)
+        private void OnEmailTextBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TextBox_Email.Text))
+            if (string.IsNullOrWhiteSpace(EmailTextBox.Text))
             {
-                SetPlaceholder(TextBox_Email, emailPlaceholderText);
+                SetTextBoxPlaceholder(EmailTextBox, EmailPlaceholderText);
             }
         }
 
-        private void TextBox_Password_GotFocus(object sender, RoutedEventArgs e)
+        private void OnPasswordTextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            ClearPlaceholder((TextBox)sender);
+            ClearTextBoxPlaceholder(PasswordTextBox);
         }
 
-        private void TextBox_Password_LostFocus(object sender, RoutedEventArgs e)
+        private void OnPasswordTextBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TextBox_Password.Text))
+            if (string.IsNullOrWhiteSpace(PasswordTextBox.Text))
             {
-                SetPlaceholder(TextBox_Password, passwordPlaceholderText);
+                SetTextBoxPlaceholder(PasswordTextBox, PasswordPlaceholderText);
             }
         }
 
-        private void TextBox_ConfirmPassword_GotFocus(object sender, RoutedEventArgs e)
+        private void OnConfirmPasswordTextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            ClearPlaceholder((TextBox)sender);
+            ClearTextBoxPlaceholder(ConfirmPasswordTextBox);
         }
 
-        private void TextBox_ConfirmPassword_LostFocus(object sender, RoutedEventArgs e)
+        private void OnConfirmPasswordTextBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TextBox_ConfirmPassword.Text))
+            if (string.IsNullOrWhiteSpace(ConfirmPasswordTextBox.Text))
             {
-                SetPlaceholder(TextBox_ConfirmPassword, confirmPasswordPlaceholderText);
+                SetTextBoxPlaceholder(ConfirmPasswordTextBox, ConfirmPasswordPlaceholderText);
             }
         }
     }
 
-    //проверка валидации
+    /// <summary>
+    /// Класс для проверки валидации входных данных
+    /// </summary>
     public class InputValidator
     {
         public bool IsValidEmail(string email)
@@ -241,8 +268,8 @@ namespace Todo
 
             try
             {
-                var addr = new MailAddress(email);
-                return addr.Address == email;
+                var mailAddress = new MailAddress(email);
+                return mailAddress.Address == email;
             }
             catch
             {
@@ -252,7 +279,6 @@ namespace Todo
 
         public bool IsValidPassword(string password)
         {
-
             if (string.IsNullOrEmpty(password))
             {
                 return false;
