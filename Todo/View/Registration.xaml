@@ -8,7 +8,7 @@
         Title="Registration" Height="478" Width="800">
 
     <Grid Margin="0,0,0,-6">
-        <!-- Back Button -->
+      
         <Button x:Name="BackButton"
                 Content="Назад"
                 HorizontalAlignment="Left"
@@ -33,7 +33,7 @@
             </Button.Template>
         </Button>
 
-        <!-- Register Button -->
+       
         <Button x:Name="RegisterButton"
                 Content="Зарегистрироваться"
                 HorizontalAlignment="Left"
@@ -59,7 +59,7 @@
             </Button.Template>
         </Button>
 
-        <!-- Welcome Label -->
+    
         <Label x:Name="WelcomeLabel" 
                Content="Welcome back" 
                HorizontalAlignment="Left" 
@@ -67,21 +67,21 @@
                VerticalAlignment="Top" 
                FontSize="30"/>
 
-        <!-- Username Label -->
+    
         <Label Content="Имя пользователя" 
                HorizontalAlignment="Left" 
                Margin="422,79,0,0" 
                VerticalAlignment="Top" 
                FontSize="18"/>
 
-        <!-- Email Label -->
+       
         <Label Content="Ваша почта" 
                HorizontalAlignment="Left" 
                Margin="422,144,0,0" 
                VerticalAlignment="Top" 
                FontSize="18"/>
 
-        <!-- Username TextBox -->
+      
         <TextBox x:Name="UsernameTextBox"
                  HorizontalAlignment="Left" 
                  Margin="426,118,0,0" 
@@ -93,7 +93,6 @@
                  BorderBrush="#FFCCCCCC"
                  Foreground="#FF4B4B4B"/>
 
-        <!-- Email TextBox -->
         <TextBox x:Name="EmailTextBox"
                  HorizontalAlignment="Left" 
                  Margin="424,179,0,0" 
@@ -105,12 +104,12 @@
                  BorderBrush="#FFCCCCCC"
                  Foreground="#FF4A4A4A"/>
 
-        <!-- Image -->
+     
         <Image Margin="98,47,504,256" 
                Source="/Image/Image1.png" 
                Stretch="Fill"/>
 
-        <!-- Separator Line 1 -->
+     
         <Border BorderBrush="#FFBEBEBE" 
                 BorderThickness="1" 
                 HorizontalAlignment="Left" 
@@ -119,21 +118,19 @@
                 VerticalAlignment="Top" 
                 Width="297"/>
 
-        <!-- Password Label -->
         <Label Content="Пароль" 
                HorizontalAlignment="Left" 
                Margin="422,204,0,0" 
                VerticalAlignment="Top" 
                FontSize="18"/>
 
-        <!-- Confirm Password Label -->
         <Label Content="Повторите пароль" 
                HorizontalAlignment="Left" 
                Margin="423,265,0,0" 
                VerticalAlignment="Top" 
                FontSize="18"/>
 
-        <!-- Password TextBox -->
+     
         <TextBox x:Name="PasswordTextBox"
                  HorizontalAlignment="Left" 
                  Margin="426,233,0,0" 
@@ -145,7 +142,6 @@
                  BorderBrush="#FFCCCCCC"
                  Foreground="#FF4B4B4B"/>
 
-        <!-- Confirm Password TextBox -->
         <TextBox x:Name="ConfirmPasswordTextBox"
                  HorizontalAlignment="Left" 
                  Margin="427,300,0,0" 
@@ -157,7 +153,7 @@
                  BorderBrush="#FFCCCCCC"
                  Foreground="#FF4A4A4A"/>
 
-        <!-- Separator Line 2 -->
+     
         <Border BorderBrush="#FFBEBEBE" 
                 BorderThickness="1" 
                 HorizontalAlignment="Left" 
@@ -166,7 +162,6 @@
                 VerticalAlignment="Top" 
                 Width="294"/>
 
-        <!-- Separator Line 3 -->
         <Border BorderBrush="#FFBEBEBE" 
                 BorderThickness="1" 
                 HorizontalAlignment="Left" 
@@ -175,7 +170,7 @@
                 VerticalAlignment="Top" 
                 Width="297"/>
 
-        <!-- Separator Line 4 -->
+
         <Border BorderBrush="#FFBEBEBE" 
                 BorderThickness="1" 
                 HorizontalAlignment="Left" 

@@ -13,7 +13,7 @@
             <ColumnDefinition Width="377*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Registration Button -->
+
         <Button x:Name="RegisterButton"
                 Grid.Column="1"
                 Content="Регистрация"
@@ -40,7 +40,7 @@
             </Button.Template>
         </Button>
 
-        <!-- Login Button -->
+        
         <Button x:Name="LoginButton"
                 Grid.Column="1"
                 Content="Войти"
@@ -68,7 +68,7 @@
             </Button.Template>
         </Button>
 
-        <!-- Welcome Label -->
+  
         <Label x:Name="WelcomeLabel" 
                Grid.Column="1" 
                Content="Добро пожаловать!" 
@@ -77,7 +77,7 @@
                VerticalAlignment="Top" 
                FontSize="30"/>
 
-        <!-- Email Label -->
+
         <Label Grid.Column="1" 
                Content="Почта" 
                HorizontalAlignment="Left" 
@@ -85,7 +85,7 @@
                VerticalAlignment="Top" 
                FontSize="18"/>
 
-        <!-- Password Label -->
+ 
         <Label Grid.Column="1" 
                Content="Пароль" 
                HorizontalAlignment="Left" 
@@ -93,7 +93,7 @@
                VerticalAlignment="Top" 
                FontSize="18"/>
 
-        <!-- Email TextBox -->
+      
         <TextBox x:Name="EmailTextBox"
                  Grid.Column="1" 
                  HorizontalAlignment="Left" 
@@ -105,7 +105,7 @@
                  BorderBrush="White" 
                  Foreground="#FF4B4B4B"/>
 
-        <!-- Password Recovery Button -->
+      
         <Button Grid.Column="1" 
                 Content="Восстановить пароль" 
                 HorizontalAlignment="Left" 
@@ -115,7 +115,7 @@
                 BorderBrush="White" 
                 Background="White"/>
 
-        <!-- Password TextBox -->
+    
         <TextBox x:Name="PasswordTextBox"
                  Grid.Column="1" 
                  HorizontalAlignment="Left"  
@@ -129,13 +129,13 @@
                  Background="White" 
                  SelectionBrush="#FF117CD1"/>
 
-        <!-- Images -->
+ 
         <Image Margin="69,47,499,233" 
                Source="/Image1.png" 
                Stretch="Fill" 
                Grid.Column="1"/>
 
-        <!-- Separators -->
+   
         <Border BorderBrush="#FFBEBEBE" 
                 BorderThickness="1" 
                 Grid.Column="1" 

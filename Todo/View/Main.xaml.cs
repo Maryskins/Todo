@@ -108,7 +108,7 @@ namespace Todo.View
                 UserPhotoImage.Source = _userPhoto;
             }
         }
-        // В классе Main (Main.xaml.cs) сделайте метод PUBLIC
+
         public void SetUserPhoto(BitmapImage photo)
         {
             _userPhoto = photo;
