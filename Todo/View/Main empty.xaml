@@ -1,11 +1,11 @@
-﻿<Window x:Class="Todo.Main_empty"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Todo"
-        mc:Ignorable="d"
-        Title="Main_empty" Height="450" Width="800">
+﻿<Window x:Class="Todo.View.Main_empty"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Todo.View"
+      mc:Ignorable="d" 
+      Title="Main_empty" Height="450" Width="800">
 
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
@@ -13,7 +13,6 @@
             <ColumnDefinition Width="737*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Create Task Button -->
         <Button x:Name="CreateTaskButton"
                 Content="Создать первую задачу"
                 HorizontalAlignment="Left"
@@ -41,10 +40,9 @@
             </Button.Template>
         </Button>
 
-        <!-- Separator -->
+
         <Rectangle Fill="Black" Margin="0,105,694,0" Grid.ColumnSpan="2" />
 
-        <!-- Welcome Labels -->
         <Label x:Name="WelcomeLabel" 
                Content="Добро пожаловать!" 
                HorizontalAlignment="Left" 
@@ -61,7 +59,7 @@
                FontSize="30" 
                Grid.Column="1"/>
 
-        <!-- Exit Button -->
+
         <Button x:Name="ExitButton"
                 HorizontalContentAlignment="Left" 
                 Padding="20,0,0,0" 
@@ -76,7 +74,6 @@
                 Margin="0,1,0,0" 
                 Grid.ColumnSpan="2"/>
 
-        <!-- Change Photo Button -->
         <Button x:Name="ChangePhotoButton" 
                 HorizontalContentAlignment="Left" 
                 Padding="20,0,0,0" 
@@ -93,7 +90,7 @@
                 Grid.ColumnSpan="2">
         </Button>
 
-        <!-- Profile Image -->
+
         <Image x:Name="UserProfileImage"
                Margin="74,10,569,328" 
                Source="/Image/Image3.png" 

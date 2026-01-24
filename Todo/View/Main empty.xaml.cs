@@ -1,42 +1,13 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Todo;
 
-namespace Todo
+namespace Todo.View
 {
-    /// <summary>
-    /// Класс для представления задачи
-    /// </summary>
-    public class TaskItem
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime DueDate { get; set; }
-        public bool IsCompleted { get; set; }
-
-        public TaskItem(string title, string description, DateTime dueDate)
-        {
-            Title = title;
-            Description = description;
-            DueDate = dueDate;
-            IsCompleted = false;
-        }
-    }
-
-    /// <summary>
-    /// Логика взаимодействия для Main_empty.xaml
-    /// </summary>
     public partial class Main_empty : Window
     {
         private const string DefaultPhotoFileName = "фото_умолч.jpg";
@@ -55,81 +26,82 @@ namespace Todo
         public Main_empty()
         {
             InitializeComponent();
-
-            SubscribeToEvents();
+            SetupEventHandlers();
         }
 
-        private void SubscribeToEvents()
+        private void SetupEventHandlers()
         {
-            Loaded += OnWindowLoaded;
-            ExitButton.Click += OnExitButtonClick;
-            CreateTaskButton.Click += OnCreateTaskButtonClick;
-            ChangePhotoButton.Click += OnChangePhotoButtonClick;
+            Loaded += HandleWindowLoaded;
+            ExitButton.Click += HandleExit;
+            CreateTaskButton.Click += HandleCreateTask;
+            ChangePhotoButton.Click += HandleChangePhoto;
         }
 
-        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        private void HandleWindowLoaded(object sender, RoutedEventArgs e)
         {
             LoadUserPhoto();
         }
 
-        private void OnExitButtonClick(object sender, RoutedEventArgs e)
+        private void HandleExit(object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-        private void OnCreateTaskButtonClick(object sender, RoutedEventArgs e)
+        private void HandleCreateTask(object sender, RoutedEventArgs e)
         {
-            CreateAndOpenTaskWindow();
+            OpenTaskCreationWindow();
         }
 
-        private void OnChangePhotoButtonClick(object sender, RoutedEventArgs e)
+        private void HandleChangePhoto(object sender, RoutedEventArgs e)
         {
             ChangeUserPhoto();
         }
 
-        private void CreateAndOpenTaskWindow()
+        private void OpenTaskCreationWindow()
         {
-            Creating_tasks taskCreationWindow = new Creating_tasks();
 
-           
-            taskCreationWindow.TaskCreated += OnTaskCreated;
+            var taskCreationWindow = new Creating_tasks
+            {
+                Title = "Создание задачи",
+                Width = 800,
+                Height = 450,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+
+
+            taskCreationWindow.TaskCreated += HandleTaskCreated;
+
+
+            taskCreationWindow.Closed += (s, args) =>
+            {
+                taskCreationWindow.TaskCreated -= HandleTaskCreated;
+            };
+
             taskCreationWindow.Show();
         }
 
-      
-        private void OnTaskCreated(Todo.Main.Task newTask)
+
+        private void HandleTaskCreated(Todo.View.Main.Task newTask)
         {
-           
-            Main mainWindow = new Main();
+            var mainWindow = new Todo.View.Main();
 
+            mainWindow.AddNewTask(newTask);
 
-            if (mainWindow is Main main)
+            if (UserPhoto != null)
             {
- 
-                main.AddNewTask(newTask);
-
-                if (UserPhoto != null)
-                {
-                    main.SetUserPhoto(UserPhoto);
-                }
-
-                main.Show();
-                this.Close();
+                mainWindow.SetUserPhoto(UserPhoto);
             }
-            else
-            {
-                MessageBox.Show("Ошибка создания главного окна", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+
+            mainWindow.Show();
+            Close();
         }
 
-       
         private void ChangeUserPhoto()
         {
             try
             {
-                OpenFileDialog openFileDialog = CreateImageFileDialog();
-                bool? dialogResult = openFileDialog.ShowDialog();
+                var openFileDialog = CreateImageFileDialog();
+                var dialogResult = openFileDialog.ShowDialog();
 
                 if (dialogResult == true)
                 {
@@ -158,7 +130,7 @@ namespace Todo
 
         private void ProcessSelectedPhoto(string selectedImagePath)
         {
-            if (!System.IO.File.Exists(selectedImagePath))
+            if (!File.Exists(selectedImagePath))
             {
                 ShowErrorMessage("Выбранный файл не существует!");
                 return;
@@ -175,7 +147,7 @@ namespace Todo
         {
             try
             {
-                BitmapImage bitmapImage = CreateBitmapImage(imagePath);
+                var bitmapImage = CreateBitmapImage(imagePath);
 
                 if (UserProfileImage != null)
                 {
@@ -199,13 +171,11 @@ namespace Todo
 
         private BitmapImage CreateBitmapImage(string imagePath)
         {
-            BitmapImage bitmap = new BitmapImage();
-
+            var bitmap = new BitmapImage();
             bitmap.BeginInit();
             bitmap.UriSource = new Uri(imagePath);
             bitmap.CacheOption = BitmapCacheOption.OnLoad;
             bitmap.EndInit();
-
             return bitmap;
         }
 
@@ -213,7 +183,7 @@ namespace Todo
         {
             try
             {
-                if (System.IO.File.Exists(DefaultPhotoFileName))
+                if (File.Exists(DefaultPhotoFileName))
                 {
                     LoadAndDisplayImage(DefaultPhotoFileName);
                 }
@@ -224,7 +194,7 @@ namespace Todo
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Ошибка загрузки фото по умолчанию: {ex.Message}");
+                Console.WriteLine($"Ошибка загрузки фото по умолчанию: {ex.Message}");
             }
         }
 
@@ -232,17 +202,17 @@ namespace Todo
         {
             try
             {
-                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string appFolder = System.IO.Path.Combine(appDataPath, ConfigFolderName);
+                var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var appFolder = Path.Combine(appDataPath, ConfigFolderName);
 
-                System.IO.Directory.CreateDirectory(appFolder);
+                Directory.CreateDirectory(appFolder);
 
-                string configFilePath = System.IO.Path.Combine(appFolder, PhotoPathFileName);
-                System.IO.File.WriteAllText(configFilePath, photoPath);
+                var configFilePath = Path.Combine(appFolder, PhotoPathFileName);
+                File.WriteAllText(configFilePath, photoPath);
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Ошибка сохранения пути: {ex.Message}");
+                Console.WriteLine($"Ошибка сохранения пути: {ex.Message}");
             }
         }
 
@@ -250,9 +220,9 @@ namespace Todo
         {
             try
             {
-                string savedPhotoPath = GetSavedPhotoPath();
+                var savedPhotoPath = GetSavedPhotoPath();
 
-                if (!string.IsNullOrEmpty(savedPhotoPath) && System.IO.File.Exists(savedPhotoPath))
+                if (!string.IsNullOrEmpty(savedPhotoPath) && File.Exists(savedPhotoPath))
                 {
                     LoadAndDisplayImage(savedPhotoPath);
                     return;
@@ -263,7 +233,7 @@ namespace Todo
             catch (Exception ex)
             {
                 LoadDefaultPhoto();
-                System.Diagnostics.Debug.WriteLine($"Ошибка загрузки фото: {ex.Message}");
+                Console.WriteLine($"Ошибка загрузки фото: {ex.Message}");
             }
         }
 
@@ -271,17 +241,17 @@ namespace Todo
         {
             try
             {
-                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string configFilePath = System.IO.Path.Combine(appDataPath, ConfigFolderName, PhotoPathFileName);
+                var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var configFilePath = Path.Combine(appDataPath, ConfigFolderName, PhotoPathFileName);
 
-                if (System.IO.File.Exists(configFilePath))
+                if (File.Exists(configFilePath))
                 {
-                    return System.IO.File.ReadAllText(configFilePath);
+                    return File.ReadAllText(configFilePath);
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Ошибка чтения сохраненного пути: {ex.Message}");
+                Console.WriteLine($"Ошибка чтения сохраненного пути: {ex.Message}");
             }
 
             return null;
@@ -289,17 +259,36 @@ namespace Todo
 
         private void ShowSuccessMessage(string message)
         {
-            MessageBox.Show(message, "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(message, "Успех!",
+                MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void ShowErrorMessage(string message)
         {
-            MessageBox.Show(message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(message, "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void ShowInformationMessage(string message)
         {
-            MessageBox.Show(message, "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(message, "Информация",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    public class TaskItem
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime DueDate { get; set; }
+        public bool IsCompleted { get; set; }
+
+        public TaskItem(string title, string description, DateTime dueDate)
+        {
+            Title = title;
+            Description = description;
+            DueDate = dueDate;
+            IsCompleted = false;
         }
     }
 }
